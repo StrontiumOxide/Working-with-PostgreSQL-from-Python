@@ -1,7 +1,9 @@
 import psycopg2
 
+
 class DateError(Exception):
     pass
+
 
 class ClientBD:
 
@@ -28,9 +30,11 @@ class ClientBD:
 
             print(f"Подключение к базе данных {self.database} произведено успешно!")
             
+
     def __str__(self) -> str:
         return self.database
     
+
     def __connect_bd__(self, query: str) -> None:
 
         """
@@ -45,6 +49,7 @@ class ClientBD:
             with conn.cursor() as cursor:
                 cursor.execute(query=query)
                 conn.commit()
+
 
     def __create_table__(self) -> None:
 
@@ -62,11 +67,13 @@ class ClientBD:
 
                 CREATE TABLE IF NOT EXISTS client_phone (
                 id SERIAl REFERENCES client(id),
-                phone_number DECIMAL PRIMARY KEY
+                phone_number BIGINT,
+                CONSTRAINT id_phone PRIMARY KEY (id, phone_number)
                 );
             """
         
         self.__connect_bd__(query=query)
+
 
     def __drop_table__(self) -> None:
 
@@ -81,6 +88,8 @@ class ClientBD:
         
         self.__connect_bd__(query=query)
 
+        print(f"База данных {self.database} полностью очищена!")
+
 
     def add_client(self, first_name: str, last_name: str, email: str) -> None:
 
@@ -94,6 +103,21 @@ class ClientBD:
                 VALUES ('%s', '%s', '%s');
             """ % (first_name, last_name, email)
             
+        self.__connect_bd__(query=query)
+
+
+    def add_phone(self, phone: int, client_id: int) -> None:
+
+        """
+        Функция для добавления телефона к существующему пользователю в базу данных.
+        Для добавление необходимо передать телефон и id_client.
+        """
+
+        query = """
+                INSERT INTO client_phone (id, phone_number)
+                VALUES (%s, %s);
+            """ % (client_id, phone)
+        
         self.__connect_bd__(query=query)
 
     
