@@ -159,5 +159,23 @@ class ClientBD:
 
         print("Данные обновлены!")
 
+    
+    def delete_phone(self, client_id: int, phone: int) -> None:
+
+        """
+        Функция для удаление номером клиента.
+        """
+
+        query = """
+                DELETE FROM client_phone
+                WHERE id = %s and phone_number = %s;
+            """ % (client_id, phone)
+        
+        self.__connect_bd__(query=query)
+
+        print(f"Номер телефона {phone} удалён у пользователя id = {client_id}!")
+
+
+
 
 
