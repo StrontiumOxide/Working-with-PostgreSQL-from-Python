@@ -105,6 +105,8 @@ class ClientBD:
             
         self.__connect_bd__(query=query)
 
+        print(f"Пользователь {first_name} {last_name} добавлен в базу данных!")
+
 
     def add_phone(self, phone: int, client_id: int) -> None:
 
@@ -120,5 +122,42 @@ class ClientBD:
         
         self.__connect_bd__(query=query)
 
+        print(f"Номер телефона {phone} добавлен пользователю id = {client_id}!")
+
+
+    def change_client(self, client_id: int, first_name=None, last_name=None, email=None, phones=None) -> None:
+        
+        """
+        Функция для изменения информации о клиенте.
+        """
+
+        def created_query(attitude: str, variable: str, variable_1) -> None:
+
+            """
+            Функция для создания SQL-запроса взависимости от изменяемых данных.
+            """
+
+            query = """
+                    UPDATE %s
+                    SET %s = '%s'
+                    WHERE id = %s
+                """ % (attitude, variable, variable_1, client_id)
+            
+            self.__connect_bd__(query=query)
+
+        if first_name != None:
+            created_query(attitude="client", variable="first_name", variable_1=first_name)
+
+        if last_name != None:
+            created_query(attitude="client", variable="last_name", variable_1=last_name)
+
+        if email != None:
+            created_query(attitude="client", variable="email", variable_1=email)
     
+        if phones != None:
+            created_query(attitude="client_phone", variable="phone_number", variable_1=phones)
+
+        print("Данные обновлены!")
+
+
 
